@@ -8,7 +8,6 @@ import withLocalize, {
 import CONST from '../../CONST';
 import styles from '../../styles/styles';
 import ExpensiTextInput from '../../components/ExpensiTextInput';
-import InlineErrorText from '../../components/InlineErrorText';
 
 const propTypes = {
     /** String to control the first password box in the form */
@@ -30,35 +29,23 @@ class NewPasswordForm extends React.Component {
         super(props);
 
         this.state = {
-            confirmNewPassword: '',
             passwordHintError: false,
-            shouldShowPasswordConfirmError: false,
         };
     }
 
-    componentDidUpdate(prevProps, prevState) {
-        const eitherPasswordChanged = (this.props.password !== prevProps.password)
-        || this.state.confirmNewPassword !== prevState.confirmNewPassword;
-        if (eitherPasswordChanged) {
-            this.props.updateIsFormValid(this.isValidForm());
+    componentDidUpdate(prevProps) {
+        const passwordChanged = (this.props.password !== prevProps.password);
+        if (passwordChanged) {
+            this.props.updateIsFormValid(this.isValidPassword());
         }
     }
 
-    onBlurNewPassword() {
+    onBlurPassword() {
         if (this.state.passwordHintError) {
             return;
         }
         if (this.props.password && !this.isValidPassword()) {
             this.setState({passwordHintError: true});
-        }
-    }
-
-    onBlurConfirmPassword() {
-        if (this.state.shouldShowPasswordConfirmError) {
-            return;
-        }
-        if (this.state.confirmNewPassword && !this.doPasswordsMatch()) {
-            this.setState({shouldShowPasswordConfirmError: true});
         }
     }
 
@@ -74,22 +61,6 @@ class NewPasswordForm extends React.Component {
         return this.state.passwordHintError && this.props.password && !this.isValidPassword();
     }
 
-    doPasswordsMatch() {
-        return this.props.password === this.state.confirmNewPassword;
-    }
-
-    isValidForm() {
-        return this.isValidPassword() && this.doPasswordsMatch();
-    }
-
-    showPasswordMatchError() {
-        return Boolean(
-            !this.doPasswordsMatch()
-            && this.state.shouldShowPasswordConfirmError
-            && this.state.confirmNewPassword,
-        );
-    }
-
     render() {
         return (
             <>
@@ -101,7 +72,8 @@ class NewPasswordForm extends React.Component {
                         textContentType="password"
                         value={this.props.password}
                         onChangeText={password => this.props.updatePassword(password)}
-                        onBlur={() => this.onBlurNewPassword()}
+                        onSubmitEditing={() => this.props.onSubmitEditing()}
+                        onBlur={() => this.onBlurPassword()}
                     />
                     <ExpensifyText
                         style={[
@@ -112,23 +84,6 @@ class NewPasswordForm extends React.Component {
                     >
                         {this.props.translate('setPasswordPage.newPasswordPrompt')}
                     </ExpensifyText>
-                </View>
-                <View style={styles.mb6}>
-                    <ExpensiTextInput
-                        label={`${this.props.translate('setPasswordPage.confirmNewPassword')}*`}
-                        secureTextEntry
-                        autoCompleteType="password"
-                        textContentType="password"
-                        value={this.state.confirmNewPassword}
-                        onChangeText={confirmNewPassword => this.setState({confirmNewPassword})}
-                        onSubmitEditing={() => this.props.onSubmitEditing()}
-                        onBlur={() => this.onBlurConfirmPassword()}
-                    />
-                    {this.showPasswordMatchError() && (
-                        <InlineErrorText>
-                            {this.props.translate('setPasswordPage.passwordsDontMatch')}
-                        </InlineErrorText>
-                    )}
                 </View>
             </>
         );

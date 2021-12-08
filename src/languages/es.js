@@ -421,7 +421,6 @@ export default {
     },
     setPasswordPage: {
         enterPassword: 'Escribe una contraseña',
-        confirmNewPassword: 'Confirma la contraseña',
         setPassword: 'Configura tu contraseña',
         passwordsDontMatch: 'Las contraseñas deben coincidir',
         newPasswordPrompt: 'La contraseña debe tener al menos 8 caracteres, \n1 letra mayúscula, 1 letra minúscula y 1 número.',

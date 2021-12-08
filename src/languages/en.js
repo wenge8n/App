@@ -421,7 +421,6 @@ export default {
     },
     setPasswordPage: {
         enterPassword: 'Enter a password',
-        confirmNewPassword: 'Confirm the password',
         setPassword: 'Set password',
         passwordsDontMatch: 'Passwords must match',
         newPasswordPrompt: 'Your password must have at least 8 characters,\n1 capital letter, 1 lowercase letter, and 1 number.',
